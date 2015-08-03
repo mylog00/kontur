@@ -3,48 +3,90 @@ package ru.kontur;
 import java.util.*;
 
 /**
+ * Класс для поиска наиболее часто употребляемых слов
+ *
  * @author Dmitry
  * @since 02.08.2015
  */
 public class WordSearcher {
+    //Максимальная длинна списка
     private static final int MAX_ANSWER_NUMBER = 10;
-    private final List<String> sortedWordsList;//Список всех солов
-    private final Map<String, Integer> wordsFrequency;//Частота повторения слова
+    //Сортированный список всех солов
+    private final List<String> sortedWordsList;
+    //Частота повторения слова
+    private final Map<String, Integer> wordsFrequency;
+    //Кэш. Хранит результаты поисковых запросов
     private final Map<String, List<String>> cache;
 
-    public WordSearcher(List<String> wordsList, Map<String, Integer> wordsFrequency) {
-        this.sortedWordsList = wordsList;
+    /**
+     * Создает экземпляр объекта для поиска поиска наиболее часто употребляемых слов
+     *
+     * @param wordsFrequency Мап сопоставления слов с частой их повторения.
+     *                       {@code Кey} - слово, {@code value} - частота повторения слова
+     */
+    public WordSearcher(Map<String, Integer> wordsFrequency) {
+        this.sortedWordsList = new ArrayList<>(wordsFrequency.keySet());
         Collections.sort(this.sortedWordsList);
         this.wordsFrequency = wordsFrequency;
-        this.cache = new HashMap<>(wordsList.size() / 2);
+        this.cache = new HashMap<>(this.sortedWordsList.size() / 2);
     }
 
+    /**
+     * <p>
+     * Метод возвращающий наиболее часто употребляемые слова начинающихся с {@code searchWord}
+     * в порядке убывания частоты. В случае совпадения частот слова сортируются по алфавиту.
+     * Длинна выходного списка не превышает 10 слов.
+     * </p>
+     *
+     * @param searchWord строка с которой должны начинаться найденные слова
+     * @return список наиболее часто употребляемых слов начинающихся с {@code searchWord}.<br/>
+     * Длинна списка не может быть больше 10.
+     */
     public List<String> getMostFrequentlyUsedWords(String searchWord) {
+        //Ищем результат в кэше.
         if (this.cache.containsKey(searchWord)) {
+            //Если для этого слова уже есть результат, возвращаем его
             return this.cache.get(searchWord);
         }
+
+        //Ищем индекс первого слова начинающегося с искомой строки
         final int firstElementPos = findFirstBinarySearch(this.sortedWordsList, searchWord);
         List<String> result = Collections.<String>emptyList();
+        //Если подходящих слов нет, то результатом будет пустая строка.
         if (firstElementPos >= 0) {
-
+            //Ищем индекс последнего слова начинающегося с искомой строки
             final int lastElementPos = findLastBinarySearch(this.sortedWordsList, searchWord);
+            //Составляем подсписок из найденных слов
             List<String> matchedWords = new ArrayList<>(this.sortedWordsList.subList(firstElementPos, lastElementPos + 1));
+            //Сортируем в соответсвии с правилами
             Collections.sort(matchedWords, (s2, s1) -> {
                 Integer f1 = this.wordsFrequency.get(s1);
                 Integer f2 = this.wordsFrequency.get(s2);
+                //сначала пытаемся отсортировать по частоте
                 int res = Integer.compare(f1, f2);
                 if (res == 0) {
+                    //если частоты одинаковые то, то по алфавиту
                     return s1.compareTo(s2);
                 }
                 return res;
             });
+            //ограничиваем результат первыми десятью значениями
             result = new ArrayList<>(matchedWords.subList(0, Math.min(matchedWords.size(), MAX_ANSWER_NUMBER)));
         }
-
+        //добавляем результаты поиска для строки в кэш
         this.cache.put(searchWord, result);
+        //возвращаем результат
         return result;
     }
 
+    /**
+     * Бинарный поиск первого слова начинающегося с искомой строки
+     *
+     * @param l   Список в котором производится поиск
+     * @param key строка с которой должно начинаться искомое слово
+     * @return индекс первого слова начинающегося с {@code key}.
+     * Если элемент не найден возвращает отрицательное число
+     */
     private int findFirstBinarySearch(List<String> l, String key) {
         int low = 0;
         int high = l.size() - 1;
@@ -66,6 +108,14 @@ public class WordSearcher {
         return -(low + 1);  // key not found
     }
 
+    /**
+     * Бинарный поиск последнего слова начинающегося с искомой строки
+     *
+     * @param l   Список в котором производится поиск
+     * @param key строка с которой должно начинаться искомое слово
+     * @return индекс последнего слова начинающегося с {@code key}
+     * Если элемент не найден возвращает отрицательное число
+     */
     private int findLastBinarySearch(List<String> l, String key) {
         int low = 0;
         int high = l.size() - 1;
