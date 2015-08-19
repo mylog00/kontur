@@ -16,17 +16,14 @@ import static org.hamcrest.CoreMatchers.is;
 public class TWordSearcher {
     @Test
     public void testBase() throws FileNotFoundException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("output/test_base.out").getFile());
-        Scanner in;
-        in = new Scanner(file);
-        List<List<String>> expectedResult = new ArrayList<>();
-        while (in.hasNext()) {
-            String line = in.nextLine();
-            expectedResult.add(Arrays.asList(line.split(" ")));
-        }
-        in.close();
+        List<List<String>> expectedResult = getAnswerFromFile("output/test_base.out");
         fileTest("input/test_base.in", expectedResult);
+    }
+
+    @Test
+    public void testBase2() throws FileNotFoundException {
+        List<List<String>> expectedResult = getAnswerFromFile("output/test_2.out");
+        fileTest("input/test_2.in", expectedResult);
     }
 
     @Test
@@ -71,5 +68,19 @@ public class TWordSearcher {
         }
         in.close();
 
+    }
+
+    private List<List<String>> getAnswerFromFile(String filePath) throws FileNotFoundException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(filePath).getFile());
+        Scanner in;
+        in = new Scanner(file);
+        List<List<String>> expectedResult = new ArrayList<>();
+        while (in.hasNext()) {
+            String line = in.nextLine();
+            expectedResult.add(Arrays.asList(line.split(" ")));
+        }
+        in.close();
+        return expectedResult;
     }
 }

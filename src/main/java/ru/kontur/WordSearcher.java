@@ -16,7 +16,7 @@ public class WordSearcher {
     //Частота повторения слова
     private final Map<String, Integer> wordsFrequency;
     //Кэш. Хранит результаты поисковых запросов
-    private final Map<String, List<String>> cache;
+    private final Map<String, List<String>> resultCache;
 
     /**
      * Создает экземпляр объекта для поиска поиска наиболее часто употребляемых слов
@@ -28,7 +28,7 @@ public class WordSearcher {
         this.sortedWordsList = new ArrayList<>(wordsFrequency.keySet());
         Collections.sort(this.sortedWordsList);
         this.wordsFrequency = wordsFrequency;
-        this.cache = new HashMap<>(this.sortedWordsList.size() / 2);
+        this.resultCache = new HashMap<>(this.sortedWordsList.size() / 2);
     }
 
     /**
@@ -44,9 +44,9 @@ public class WordSearcher {
      */
     public List<String> getMostFrequentlyUsedWords(String searchWord) {
         //Ищем результат в кэше.
-        if (this.cache.containsKey(searchWord)) {
+        if (this.resultCache.containsKey(searchWord)) {
             //Если для этого слова уже есть результат, возвращаем его
-            return this.cache.get(searchWord);
+            return this.resultCache.get(searchWord);
         }
 
         //Ищем индекс первого слова начинающегося с искомой строки
@@ -59,11 +59,11 @@ public class WordSearcher {
             //Составляем подсписок из найденных слов
             List<String> matchedWords = new ArrayList<>(this.sortedWordsList.subList(firstElementPos, lastElementPos + 1));
             //Сортируем в соответсвии с правилами
-            Collections.sort(matchedWords, (s2, s1) -> {
+            Collections.sort(matchedWords, (s1, s2) -> {
                 Integer f1 = this.wordsFrequency.get(s1);
                 Integer f2 = this.wordsFrequency.get(s2);
-                //сначала пытаемся отсортировать по частоте
-                int res = Integer.compare(f1, f2);
+                //сначала пытаемся отсортировать по частоте (сначала самые частые)
+                int res = Integer.compare(f2, f1);
                 if (res == 0) {
                     //если частоты одинаковые то, то по алфавиту
                     return s1.compareTo(s2);
@@ -74,7 +74,7 @@ public class WordSearcher {
             result = new ArrayList<>(matchedWords.subList(0, Math.min(matchedWords.size(), MAX_ANSWER_NUMBER)));
         }
         //добавляем результаты поиска для строки в кэш
-        this.cache.put(searchWord, result);
+        this.resultCache.put(searchWord, result);
         //возвращаем результат
         return result;
     }
