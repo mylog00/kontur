@@ -27,7 +27,7 @@ public class Main {
         }
         in.close();
 
-        WordSearcher wordSearcher = new WordSearcher(wordsFrequency);
+        IWordSearcher wordSearcher = new WordSearcher(wordsFrequency);
         for (String searchedWord : searchedWordsList) {
             wordSearcher.getMostFrequentlyUsedWords(searchedWord).forEach(System.out::println);
             System.out.println();

@@ -8,9 +8,8 @@ import java.util.*;
  * @author Dmitry
  * @since 02.08.2015
  */
-public class WordSearcher {
-    //Максимальная длинна списка
-    private static final int MAX_ANSWER_NUMBER = 10;
+public class WordSearcher implements IWordSearcher {
+
     //Сортированный список всех солов
     private final List<String> sortedWordsList;
     //Частота повторения слова
