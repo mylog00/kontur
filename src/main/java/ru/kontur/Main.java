@@ -11,11 +11,11 @@ public class Main {
         Scanner in = new Scanner(System.in);
         int wordNumber = in.nextInt();//количество слов в найденных текстах
 
-        Map<String, Integer> wordsFrequency = new HashMap<>(wordNumber);//Частота повторения слова
+        IWordSearcher wordSearcher = new WordSearcherPrefixTree();
         while (wordNumber > 0) {
             String word = in.next();
             Integer frequency = in.nextInt();
-            wordsFrequency.put(word, frequency);
+            wordSearcher.add(word, frequency);
             wordNumber--;
         }
 
@@ -27,7 +27,6 @@ public class Main {
         }
         in.close();
 
-        IWordSearcher wordSearcher = new WordSearcherSimple(wordsFrequency);
         for (String searchedWord : searchedWordsList) {
             wordSearcher.getMostFrequentlyUsedWords(searchedWord).forEach(System.out::println);
             System.out.println();

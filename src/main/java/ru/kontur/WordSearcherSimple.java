@@ -41,6 +41,7 @@ public class WordSearcherSimple implements IWordSearcher {
      * @return список наиболее часто употребляемых слов начинающихся с {@code searchWord}.<br/>
      * Длинна списка не может быть больше 10.
      */
+    @Override
     public List<String> getMostFrequentlyUsedWords(String searchWord) {
         //Поиск результата в кэше
         if (this.resultCache.containsKey(searchWord)) {

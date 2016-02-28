@@ -22,4 +22,8 @@ public interface IWordSearcher {
      * Длинна списка не может быть больше 10.
      */
     List<String> getMostFrequentlyUsedWords(String searchWord);
+
+    default void add(String word, Integer frequency){
+        throw new UnsupportedOperationException();
+    };
 }
