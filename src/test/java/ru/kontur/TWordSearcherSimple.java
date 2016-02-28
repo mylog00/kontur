@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
  * @author Dmitry
  * @since 03.08.2015
  */
-public class TWordSearcher {
+public class TWordSearcherSimple {
     @Test
     public void testBase() throws FileNotFoundException {
         List<List<String>> expectedResult = getAnswerFromFile("output/test_base.out");
@@ -45,7 +45,7 @@ public class TWordSearcher {
             wordNumber--;
         }
 
-        WordSearcher searcher = new WordSearcher(wordsFrequency);
+        WordSearcherSimple searcher = new WordSearcherSimple(wordsFrequency);
         wordNumber = in.nextInt();//количество слов для поиска
         List<String> searchStringList = new ArrayList<>(wordNumber);
         while (wordNumber > 0) {

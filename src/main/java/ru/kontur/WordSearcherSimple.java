@@ -8,7 +8,7 @@ import java.util.*;
  * @author Dmitry
  * @since 02.08.2015
  */
-public class WordSearcher implements IWordSearcher {
+public class WordSearcherSimple implements IWordSearcher {
 
     //Сортированный список всех солов
     private final List<String> sortedWordsList;
@@ -23,7 +23,7 @@ public class WordSearcher implements IWordSearcher {
      * @param wordsFrequency Мап сопоставления слов с частой их повторения.
      *                       {@code Кey} - слово, {@code value} - частота повторения слова
      */
-    public WordSearcher(Map<String, Integer> wordsFrequency) {
+    public WordSearcherSimple(Map<String, Integer> wordsFrequency) {
         this.sortedWordsList = new ArrayList<>(wordsFrequency.keySet());
         Collections.sort(this.sortedWordsList);
         this.wordsFrequency = wordsFrequency;
